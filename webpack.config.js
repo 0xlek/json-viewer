@@ -2,6 +2,7 @@ var path = require("path");
 var fs = require('fs-extra');
 var webpack = require("webpack");
 var { CleanWebpackPlugin } = require("clean-webpack-plugin");
+var CopyPlugin = require("copy-webpack-plugin");
 var BuildPaths = require("./lib/build-paths");
 var BuildExtension = require("./lib/build-extension-webpack-plugin");
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -12,8 +13,10 @@ var version = manifest.version;
 var entries = {
   viewer: ["./extension/src/viewer.js"],
   "viewer-alert": ["./extension/styles/viewer-alert.scss"],
+  "jq-modal": ["./extension/styles/jq-modal.scss"],
   options: ["./extension/src/options.js"],
   background: ["./extension/src/background.js"],
+  "offscreen-jq": ["./extension/src/offscreen-jq.js"],
   "omnibox-page": ["./extension/src/omnibox-page.js"]
 };
 
@@ -53,6 +56,7 @@ var webpackConfig = {
   output: {
     path: path.join(__dirname, "build/json_viewer/assets"),
     filename: "[name].js",
+    publicPath: '',
     environment: {
       arrowFunction: true,
       const: true
@@ -88,6 +92,11 @@ var webpackConfig = {
   resolve: {
     extensions: ['.js', '.css', '.scss'],
     modules: [path.resolve(__dirname, './extension'), 'node_modules'],
+    fallback: {
+      "fs": false,
+      "path": false,
+      "crypto": false
+    }
   },
   externals: [
     {
@@ -98,6 +107,11 @@ var webpackConfig = {
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].css"
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: 'node_modules/jq-web/jq.wasm', to: 'jq.wasm' }
+      ]
     }),
     new webpack.DefinePlugin({
       "process.env": {

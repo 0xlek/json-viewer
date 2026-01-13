@@ -2,6 +2,7 @@ import chromeFramework from 'chrome-framework';
 import svgGear from './svg-gear';
 import svgRaw from './svg-raw';
 import svgUnfold from './svg-unfold';
+import renderJqButton from './render-jq-button';
 
 function renderExtras(pre, options, highlighter) {
   const extras = document.createElement("div");
@@ -64,6 +65,9 @@ function renderExtras(pre, options, highlighter) {
 
   pre.setAttribute('data-folded', options.addons.alwaysFold || options.addons.awaysFold)
   extras.appendChild(unfoldLink);
+
+  const jqButton = renderJqButton(pre, options, highlighter);
+  extras.appendChild(jqButton);
 
   document.body.appendChild(extras);
 }

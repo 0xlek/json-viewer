@@ -1,0 +1,274 @@
+.jq-modal-overlay {
+  &:before {
+    content: 'loaded';
+    display: none;
+  }
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 150ms ease-in;
+}
+
+.jq-modal-container {
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  max-height: 80vh;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 150ms ease-out;
+}
+
+.jq-modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+.jq-modal-input-section {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e5e5;
+  background-color: #f8f9fa;
+  position: relative;
+}
+
+.jq-modal-input-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.jq-modal-input {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+  font-size: 14px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+
+  &::placeholder {
+    color: #999;
+  }
+}
+
+.jq-modal-autocomplete {
+  position: absolute;
+  top: 100%;
+  left: 20px;
+  right: 20px;
+  margin-top: -16px;
+  background-color: white;
+  border: 2px solid #007bff;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: none;
+
+  &.visible {
+    display: block;
+  }
+}
+
+.jq-modal-autocomplete-item {
+  padding: 8px 12px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  user-select: none;
+  color: #333;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: #e3f2fd;
+    color: #333;
+  }
+
+  &.selected {
+    background-color: #2196f3;
+    color: white;
+  }
+}
+
+.jq-modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: #f0f0f0;
+    color: #000;
+  }
+}
+
+.jq-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  height: 400px;
+  min-height: 400px;
+  max-height: 400px;
+  position: relative;
+}
+
+.jq-modal-result {
+  height: 100%;
+
+  .CodeMirror {
+    height: 100%;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .CodeMirror-scroll {
+    height: 100%;
+  }
+}
+
+.jq-modal-error {
+  padding: 12px 16px;
+  height: 100%;
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 4px;
+  color: #c00;
+  font-family: monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.jq-modal-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #666;
+
+  span {
+    margin-left: 10px;
+  }
+
+  &::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 3px solid #e5e5e5;
+    border-top-color: #666;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+.jq-modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.jq-modal-copy {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  &:active {
+    background-color: #004494;
+  }
+}
+
+.jq-modal-copy-feedback {
+  color: #28a745;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 200ms;
+
+  &.show {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hidden {
+  display: none;
+}

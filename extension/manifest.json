@@ -16,6 +16,8 @@
       "resources": [
         "assets/viewer.css",
         "assets/viewer-alert.css",
+        "assets/jq-modal.css",
+        "assets/jq.wasm",
         "pages/options.html",
         "pages/omnibox.html"
       ],
@@ -34,8 +36,11 @@
   "background": {
     "service_worker": "assets/background.js"
   },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
   "host_permissions": [
     "<all_urls>"
   ],
-  "permissions": ["storage"]
+  "permissions": ["storage", "clipboardWrite", "offscreen"]
 }
