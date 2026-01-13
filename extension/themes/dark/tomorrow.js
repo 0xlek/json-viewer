@@ -1,2 +1,2 @@
-require('./tomorrow/tomorrow.theme.css');
-require('./tomorrow/tomorrow.scss');
+import './tomorrow/tomorrow.theme.css';
+import './tomorrow/tomorrow.scss';

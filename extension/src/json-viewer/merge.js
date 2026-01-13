@@ -1,11 +1,13 @@
 function merge() {
-  var obj = {}, i = 0, il = arguments.length, key;
+  const obj = {};
+  const il = arguments.length;
+
   if (il === 0) {
     return obj;
   }
 
-  for (; i < il; i++) {
-    for (key in arguments[i]) {
+  for (let i = 0; i < il; i++) {
+    for (const key in arguments[i]) {
       if (arguments[i].hasOwnProperty(key)) {
         obj[key] = arguments[i][key];
       }
@@ -14,4 +16,4 @@ function merge() {
   return obj;
 }
 
-module.exports = merge;
+export default merge;

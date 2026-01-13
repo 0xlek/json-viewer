@@ -55,19 +55,19 @@
 // - Allow a dot (.) at the end of hostnames (http://example.com.)
 
 function relativePath() {
-    return "(?:[/?#]\\S*)?";
+  return "(?:[/?#]\\S*)?";
 }
 
 function absolutePath() {
-    return "(?:(?:https?|ftp)://)" +        /* protocol identifier*/
-        "(?:\\S+(?::\\S*)?@)?" +            /* user:pass authentication*/
-        "(?:" +
-        "(?:\\[[a-f0-9.:]+\\])" +           /* IPv6 or hybrid addresses*/
-        "|" +
-        "(?:[a-z0-9\\u00a1-\\uffff.-]+)" +  /* anything else, including IPv4 addresses */
-        ")" +
-        "(?::\\d{2,5})?" +                  /* port number*/
-        relativePath();                     /* resource path*/
+  return "(?:(?:https?|ftp)://)" +
+    "(?:\\S+(?::\\S*)?@)?" +
+    "(?:" +
+    "(?:\\[[a-f0-9.:]+\\])" +
+    "|" +
+    "(?:[a-z0-9\\u00a1-\\uffff.-]+)" +
+    ")" +
+    "(?::\\d{2,5})?" +
+    relativePath();
 }
 
-module.exports = new RegExp("^(" + absolutePath() + "|" + relativePath() + ")$", "i");
+export default new RegExp(`^(${absolutePath()}|${relativePath()})$`, "i");

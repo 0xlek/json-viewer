@@ -1,2 +1,2 @@
-require('codemirror/theme/mbo.css');
-require('./mbo/mbo.scss');
+import 'codemirror/theme/mbo.css';
+import './mbo/mbo.scss';

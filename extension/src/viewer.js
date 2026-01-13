@@ -1,9 +1,9 @@
-require('./viewer-styles');
-var JSONUtils = require('./json-viewer/check-if-json');
-var highlightContent = require('./json-viewer/highlight-content');
+import './viewer-styles';
+import JSONUtils from './json-viewer/check-if-json';
+import highlightContent from './json-viewer/highlight-content';
 
 function onLoad() {
-  JSONUtils.checkIfJson(function(pre) {
+  JSONUtils.checkIfJson((pre) => {
     pre.hidden = true;
     highlightContent(pre);
   });

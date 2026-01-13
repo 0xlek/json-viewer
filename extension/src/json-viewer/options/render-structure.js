@@ -1,7 +1,7 @@
-var jsonFormater = require('../jsl-format');
+import jsonFormater from '../jsl-format';
 
 function renderStructure(CodeMirror, value) {
-  var structureInput = document.getElementById('structure');
+  const structureInput = document.getElementById('structure');
   structureInput.innerHTML = jsonFormater(JSON.stringify(value));
 
   return CodeMirror.fromTextArea(structureInput, {
@@ -12,4 +12,4 @@ function renderStructure(CodeMirror, value) {
   });
 }
 
-module.exports = renderStructure;
+export default renderStructure;

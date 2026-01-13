@@ -1,38 +1,36 @@
-var Promise = require('promise');
-var jsonFormater = require('./jsl-format');
-var extractJSON = require('./extract-json');
+import jsonFormater from './jsl-format';
+import extractJSON from './extract-json';
 
-var TOKEN = (Math.random() + 1).toString(36).slice(2, 7);
-var WRAP_START = "<wrap_" + TOKEN + ">";
-var WRAP_END = "</wrap_" + TOKEN +">";
-var NUM_REGEX = /^-?\d+\.?\d*([eE]\+)?\d*$/g;
-var ESCAPED_REGEX = "(-?\\d+\\.?\\d*([eE]\\+)?\\d*)"
+const TOKEN = (Math.random() + 1).toString(36).slice(2, 7);
+const WRAP_START = `<wrap_${TOKEN}>`;
+const WRAP_END = `</wrap_${TOKEN}>`;
+const NUM_REGEX = /^-?\d+\.?\d*([eE]\+)?\d*$/g;
+const ESCAPED_REGEX = "(-?\\d+\\.?\\d*([eE]\\+)?\\d*)";
 
-var WRAP_REGEX = new RegExp(
-  "^" + WRAP_START + ESCAPED_REGEX + WRAP_END + "$", "g"
+const WRAP_REGEX = new RegExp(
+  `^${WRAP_START}${ESCAPED_REGEX}${WRAP_END}$`, "g"
 );
 
-var REPLACE_WRAP_REGEX = new RegExp(
-  "\"" + WRAP_START + ESCAPED_REGEX + WRAP_END + "\"", "g"
+const REPLACE_WRAP_REGEX = new RegExp(
+  `"${WRAP_START}${ESCAPED_REGEX}${WRAP_END}"`, "g"
 );
 
 function contentExtractor(pre, options) {
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     try {
-      var rawJsonText = pre.textContent;
-      var jsonExtracted = extractJSON(rawJsonText);
-      var wrappedText = wrapNumbers(jsonExtracted);
+      const rawJsonText = pre.textContent;
+      const jsonExtracted = extractJSON(rawJsonText);
+      const wrappedText = wrapNumbers(jsonExtracted);
 
-      var jsonParsed = JSON.parse(wrappedText);
+      let jsonParsed = JSON.parse(wrappedText);
       if (options.addons.sortKeys) jsonParsed = sortByKeys(jsonParsed);
 
-      // Validate and decode json
-      var decodedJson = JSON.stringify(jsonParsed);
+      let decodedJson = JSON.stringify(jsonParsed);
       decodedJson = decodedJson.replace(REPLACE_WRAP_REGEX, "$1");
 
-      var jsonFormatted = normalize(jsonFormater(decodedJson, options.structure));
-      var jsonText = normalize(rawJsonText).replace(normalize(jsonExtracted), jsonFormatted);
-      resolve({jsonText: jsonText, jsonExtracted: decodedJson});
+      const jsonFormatted = normalize(jsonFormater(decodedJson, options.structure));
+      const jsonText = normalize(rawJsonText).replace(normalize(jsonExtracted), jsonFormatted);
+      resolve({jsonText, jsonExtracted: decodedJson});
 
     } catch(e) {
       reject(new Error('contentExtractor: ' + e.message));
@@ -45,42 +43,32 @@ function normalize(json) {
 }
 
 function sortByKeys(obj) {
-    if (typeof obj !== 'object' || !obj) return obj;
+  if (typeof obj !== 'object' || !obj) return obj;
 
-    var sorted;
-    if (Array.isArray(obj)) {
-      sorted = [];
-      obj.forEach(function(val, idx) {
-        sorted[idx] = sortByKeys(val);
-      });
+  if (Array.isArray(obj)) {
+    return obj.map(val => sortByKeys(val));
+  }
 
-    } else {
-      sorted = {};
-      Object.keys(obj).sort().forEach(function(key) {
-        sorted[key] = sortByKeys(obj[key]);
-      });
-    }
+  const sorted = {};
+  Object.keys(obj).sort().forEach(key => {
+    sorted[key] = sortByKeys(obj[key]);
+  });
 
-    return sorted;
-};
+  return sorted;
+}
 
-// Pass all numbers to json parser as strings in order to maintain precision,
-// unwrap them later without quotes.
-//
-// Solution with some changes from https://github.com/alexlopashev
 function wrapNumbers(text) {
-  var buffer = "";
-  var numberBuffer = "";
-  var isInString = false;
-  var charIsEscaped = false;
-  var isInNumber = false;
-  var previous = "";
-  var beforePrevious = "";
+  let buffer = "";
+  let numberBuffer = "";
+  let isInString = false;
+  let charIsEscaped = false;
+  let isInNumber = false;
+  let previous = "";
 
-  for (var i = 0, len = text.length; i < len; i++) {
-    var char = text[i];
+  for (let i = 0, len = text.length; i < len; i++) {
+    const char = text[i];
 
-    if (char == '"' && !charIsEscaped) {
+    if (char === '"' && !charIsEscaped) {
       isInString = !isInString;
     }
 
@@ -92,8 +80,7 @@ function wrapNumbers(text) {
       isInNumber = false;
 
       if (numberBuffer.match(NUM_REGEX)) {
-        buffer += '"' + WRAP_START + numberBuffer + WRAP_END + '"';
-
+        buffer += `"${WRAP_START}${numberBuffer}${WRAP_END}"`;
       } else {
         buffer += numberBuffer;
       }
@@ -101,15 +88,12 @@ function wrapNumbers(text) {
       numberBuffer = "";
     }
 
-    // this applies to the _next_ character - the one used in the next iteration
-    charIsEscaped = (char == '\\') ? !charIsEscaped : false
+    charIsEscaped = (char === '\\') ? !charIsEscaped : false;
 
     if (isInNumber) {
       numberBuffer += char;
-
     } else {
       buffer += char;
-      beforePrevious = previous;
       previous = char;
     }
   }
@@ -119,19 +103,19 @@ function wrapNumbers(text) {
 
 function isCharInNumber(char, previous) {
   return ('0' <= char && char <= '9') ||
-         ('0' <= previous && previous <= '9' && (char == 'e' || char == 'E')) ||
-         (('e' == previous || 'E' == previous) && char == '+') ||
-         char == '.' ||
-         char == '-';
+         ('0' <= previous && previous <= '9' && (char === 'e' || char === 'E')) ||
+         ((previous === 'e' || previous === 'E') && char === '+') ||
+         char === '.' ||
+         char === '-';
 }
 
 function isCharInString(char, previous) {
   return ('0' > char || char > '9') &&
-         char != 'e' &&
-         char != 'E' &&
-         char != '+' &&
-         char != '.' &&
-         char != '-';
+         char !== 'e' &&
+         char !== 'E' &&
+         char !== '+' &&
+         char !== '.' &&
+         char !== '-';
 }
 
-module.exports = contentExtractor;
+export default contentExtractor;

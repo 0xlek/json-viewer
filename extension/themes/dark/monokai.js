@@ -1,2 +1,2 @@
-require('codemirror/theme/monokai.css');
-require('./monokai/monokai.scss');
+import 'codemirror/theme/monokai.css';
+import './monokai/monokai.scss';

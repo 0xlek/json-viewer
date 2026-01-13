@@ -1,2 +1,2 @@
-require('./okaidia/okaidia.theme.css');
-require('./okaidia/okaidia.scss');
+import './okaidia/okaidia.theme.css';
+import './okaidia/okaidia.scss';

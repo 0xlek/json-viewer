@@ -1,28 +1,29 @@
-var CodeMirror = require('codemirror');
-require('codemirror/addon/fold/foldcode');
-require('codemirror/addon/fold/foldgutter');
-require('codemirror/addon/fold/brace-fold');
-require('codemirror/addon/dialog/dialog');
-require('codemirror/addon/scroll/annotatescrollbar');
-require('codemirror/addon/search/matchesonscrollbar');
-require('codemirror/addon/search/searchcursor');
-require('codemirror/addon/search/search');
-require('codemirror/mode/javascript/javascript');
-var merge = require('./merge');
-var defaults = require('./options/defaults');
-var URL_PATTERN = require('./url-pattern');
-var F_LETTER = 70;
+import CodeMirror from 'codemirror';
+import 'codemirror/addon/fold/foldcode';
+import 'codemirror/addon/fold/foldgutter';
+import 'codemirror/addon/fold/brace-fold';
+import 'codemirror/addon/dialog/dialog';
+import 'codemirror/addon/scroll/annotatescrollbar';
+import 'codemirror/addon/search/matchesonscrollbar';
+import 'codemirror/addon/search/searchcursor';
+import 'codemirror/addon/search/search';
+import 'codemirror/mode/javascript/javascript';
+import merge from './merge';
+import defaults from './options/defaults';
+import URL_PATTERN from './url-pattern';
 
-function Highlighter(jsonText, options) {
-  this.options = options || {};
-  this.text = jsonText;
-  this.defaultSearch = false;
-  this.theme = this.options.theme || "default";
-  this.theme = this.theme.replace(/_/, ' ');
-}
+const F_LETTER = 70;
 
-Highlighter.prototype = {
-  highlight: function() {
+class Highlighter {
+  constructor(jsonText, options) {
+    this.options = options || {};
+    this.text = jsonText;
+    this.defaultSearch = false;
+    this.theme = this.options.theme || "default";
+    this.theme = this.theme.replace(/_/, ' ');
+  }
+
+  highlight() {
     this.editor = CodeMirror(document.body, this.getEditorOptions());
     if (!this.alwaysRenderAllContent()) this.preventDefaultSearch();
     if (this.isReadOny()) this.getDOMEditor().className += ' read-only';
@@ -31,28 +32,28 @@ Highlighter.prototype = {
     this.bindMousedown();
     this.editor.refresh();
     this.editor.focus();
-  },
+  }
 
-  hide: function() {
+  hide() {
     this.getDOMEditor().hidden = true;
     this.defaultSearch = true;
-  },
+  }
 
-  show: function() {
+  show() {
     this.getDOMEditor().hidden = false;
     this.defaultSearch = false;
-  },
+  }
 
-  getDOMEditor: function() {
+  getDOMEditor() {
     return document.getElementsByClassName('CodeMirror')[0];
-  },
+  }
 
-  fold: function() {
-    var skippedRoot = false;
-    var firstLine = this.editor.firstLine();
-    var lastLine = this.editor.lastLine();
+  fold() {
+    let skippedRoot = false;
+    const firstLine = this.editor.firstLine();
+    const lastLine = this.editor.lastLine();
 
-    for (var line = firstLine; line <= lastLine; line++) {
+    for (let line = firstLine; line <= lastLine; line++) {
       if (!skippedRoot) {
         if (/(\[|\{)/.test(this.editor.getLine(line).trim())) skippedRoot = true;
 
@@ -60,48 +61,45 @@ Highlighter.prototype = {
         this.editor.foldCode({line: line, ch: 0}, null, "fold");
       }
     }
-  },
+  }
 
-  unfoldAll: function() {
-    for (var line = 0; line < this.editor.lineCount(); line++) {
+  unfoldAll() {
+    for (let line = 0; line < this.editor.lineCount(); line++) {
       this.editor.foldCode({line: line, ch: 0}, null, "unfold");
     }
-  },
+  }
 
-  bindRenderLine: function() {
-    var self = this;
+  bindRenderLine() {
     this.editor.off("renderLine");
-    this.editor.on("renderLine", function(cm, line, element) {
-      var elementsNode = element.getElementsByClassName("cm-string");
+    this.editor.on("renderLine", (cm, line, element) => {
+      const elementsNode = element.getElementsByClassName("cm-string");
       if (!elementsNode || elementsNode.length === 0) return;
 
-      var elements = [];
-      for (var i = 0; i < elementsNode.length; i++) {
+      const elements = [];
+      for (let i = 0; i < elementsNode.length; i++) {
         elements.push(elementsNode[i]);
       }
 
-      var textContent = elements.reduce(function(str, node) {
+      const textContent = elements.reduce((str, node) => {
         return str += node.textContent;
       }, "");
 
-      var text = self.removeQuotes(textContent);
+      const text = this.removeQuotes(textContent);
 
-      if (text.match(URL_PATTERN) && self.clickableUrls()) {
-        var decodedText = self.decodeText(text);
-        elements.forEach(function(node) {
-          if (self.wrapLinkWithAnchorTag()) {
-            var linkTag = document.createElement("a");
+      if (text.match(URL_PATTERN) && this.clickableUrls()) {
+        const decodedText = this.decodeText(text);
+        elements.forEach((node) => {
+          if (this.wrapLinkWithAnchorTag()) {
+            const linkTag = document.createElement("a");
             linkTag.href = decodedText;
             linkTag.setAttribute('target', '_blank')
             linkTag.classList.add("cm-string");
 
-            // reparent the child nodes to preserve the cursor when editing
-            node.childNodes.forEach(function(child) {
+            node.childNodes.forEach((child) => {
               linkTag.appendChild(child);
             });
 
-            // block CodeMirror's contextmenu handler
-            linkTag.addEventListener("contextmenu", function(e) {
+            linkTag.addEventListener("contextmenu", (e) => {
               if (e.bubbles) e.cancelBubble = true;
             });
 
@@ -113,40 +111,39 @@ Highlighter.prototype = {
         });
       }
     });
-  },
+  }
 
-  bindMousedown: function() {
-    var self = this;
+  bindMousedown() {
     this.editor.off("mousedown");
-    this.editor.on("mousedown", function(cm, event) {
-      var element = event.target;
+    this.editor.on("mousedown", (cm, event) => {
+      const element = event.target;
       if (element.classList.contains("cm-string-link")) {
-        var url = element.getAttribute("data-url")
-        var target = "_self";
-        if (self.openLinksInNewWindow()) {
+        const url = element.getAttribute("data-url")
+        let target = "_self";
+        if (this.openLinksInNewWindow()) {
           target = "_blank";
         }
         window.open(url, target);
       }
     });
-  },
+  }
 
-  removeQuotes: function(text) {
+  removeQuotes(text) {
     return text.replace(/^\"+/, '').replace(/\"+$/, '');
-  },
+  }
 
-  includeQuotes: function(text) {
-    return "\"" + text + "\"";
-  },
+  includeQuotes(text) {
+    return `"${text}"`;
+  }
 
-  decodeText: function(text) {
-    var div = document.createElement("div");
+  decodeText(text) {
+    const div = document.createElement("div");
     div.innerHTML = text;
     return div.firstChild ? div.firstChild.nodeValue : "";
-  },
+  }
 
-  getEditorOptions: function() {
-    var obligatory = {
+  getEditorOptions() {
+    const obligatory = {
       value: this.text,
       theme: this.theme,
       readOnly: this.isReadOny() ? true : false,
@@ -161,15 +158,15 @@ Highlighter.prototype = {
       obligatory.viewportMargin = Infinity;
     }
 
-    var optional = defaults.structure;
-    var configured = this.options.structure;
+    const optional = defaults.structure;
+    const configured = this.options.structure;
 
     return merge({}, optional, configured, obligatory);
-  },
+  }
 
-  getExtraKeysMap: function() {
-    var extraKeyMap = {
-      "Esc": function(cm) {
+  getExtraKeysMap() {
+    const extraKeyMap = {
+      "Esc": (cm) => {
         CodeMirror.commands.clearSearch(cm);
         cm.setSelection(cm.getCursor());
         cm.focus();
@@ -177,59 +174,57 @@ Highlighter.prototype = {
     }
 
     if (this.options.structure.readOnly) {
-      extraKeyMap["Enter"] = function(cm) {
+      extraKeyMap["Enter"] = (cm) => {
         CodeMirror.commands.findNext(cm);
       }
 
-      extraKeyMap["Shift-Enter"] = function(cm) {
+      extraKeyMap["Shift-Enter"] = (cm) => {
         CodeMirror.commands.findPrev(cm);
       }
 
-      extraKeyMap["Ctrl-V"] = extraKeyMap["Cmd-V"] = function(cm) {};
+      extraKeyMap["Ctrl-V"] = extraKeyMap["Cmd-V"] = (cm) => {};
     }
 
-    var nativeSearch = this.alwaysRenderAllContent();
+    const nativeSearch = this.alwaysRenderAllContent();
     extraKeyMap["Ctrl-F"] = nativeSearch ? false : this.openSearchDialog;
     extraKeyMap["Cmd-F"] = nativeSearch ? false : this.openSearchDialog;
     return extraKeyMap;
-  },
+  }
 
-  preventDefaultSearch: function() {
-    document.addEventListener("keydown", function(e) {
-      var metaKey = navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey;
+  preventDefaultSearch() {
+    document.addEventListener("keydown", (e) => {
+      const metaKey = navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey;
       if (!this.defaultSearch && e.keyCode === F_LETTER && metaKey) {
         e.preventDefault();
       }
-    }.bind(this), false);
-  },
+    }, false);
+  }
 
-  openSearchDialog: function(cm) {
+  openSearchDialog(cm) {
     cm.setCursor({line: 0, ch: 0});
     CodeMirror.commands.find(cm);
-  },
+  }
 
-  alwaysRenderAllContent: function() {
-    // "awaysRenderAllContent" was a typo but to avoid any problems
-    // I'll keep it a while
+  alwaysRenderAllContent() {
     return this.options.addons.alwaysRenderAllContent ||
            this.options.addons.awaysRenderAllContent;
-  },
+  }
 
-  clickableUrls: function() {
+  clickableUrls() {
     return this.options.addons.clickableUrls;
-  },
+  }
 
-  wrapLinkWithAnchorTag: function() {
+  wrapLinkWithAnchorTag() {
     return this.options.addons.wrapLinkWithAnchorTag;
-  },
+  }
 
-  openLinksInNewWindow: function() {
+  openLinksInNewWindow() {
     return this.options.addons.openLinksInNewWindow;
-  },
+  }
 
-  isReadOny: function() {
+  isReadOny() {
     return this.options.structure.readOnly;
   }
 }
 
-module.exports = Highlighter;
+export default Highlighter;

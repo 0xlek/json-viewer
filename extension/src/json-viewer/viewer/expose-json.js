@@ -1,14 +1,11 @@
 function exposeJson(text, outsideViewer) {
   console.info("[JSONViewer] Your json was stored into 'window.json', enjoy!");
 
-  if (outsideViewer) {
+  try {
     window.json = JSON.parse(text);
-
-  } else {
-    var script = document.createElement("script") ;
-    script.innerHTML = 'window.json = ' + text + ';';
-    document.head.appendChild(script);
+  } catch(e) {
+    console.error("[JSONViewer] Failed to parse JSON for window.json:", e);
   }
 }
 
-module.exports = exposeJson;
+export default exposeJson;

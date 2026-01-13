@@ -1,8 +1,8 @@
-![JSONViewer Logo](https://raw.githubusercontent.com/tulios/json-viewer/master/logo.png)
+![JSONViewer Logo](https://raw.githubusercontent.com/0xlek/json-viewer/master/logo.png)
 
 # JSON Viewer
 
-![screenshot](https://raw.githubusercontent.com/tulios/json-viewer/master/screenshot.png)
+![screenshot](https://raw.githubusercontent.com/0xlek/json-viewer/master/screenshot.png)
 
 The most beautiful and customizable JSON/JSONP highlighter that your eyes have ever seen. It is a Chrome extension for printing JSON and JSONP.
 
@@ -40,7 +40,7 @@ Features:
 
 ### Install through Chrome Web Store
 
-[![https://chrome.google.com/webstore/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh](https://raw.githubusercontent.com/tulios/json-viewer/master/tryitnow.png)](https://chrome.google.com/webstore/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh)
+[![https://chrome.google.com/webstore/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh](https://raw.githubusercontent.com/0xlek/json-viewer/master/tryitnow.png)](https://chrome.google.com/webstore/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh)
 
 ### Or compile and load by yourself
 
@@ -57,7 +57,7 @@ Features:
 
 ### JSON
 
-  [https://api.github.com/repos/tulios/json-viewer](https://api.github.com/repos/tulios/json-viewer)
+  [https://api.github.com/repos/0xlek/json-viewer](https://api.github.com/repos/0xlek/json-viewer)
 
   [http://graph.facebook.com/github](http://graph.facebook.com/github)
 
@@ -75,6 +75,10 @@ Features:
 
   [http://freemusicarchive.org/api/get/curators.jsonp?api_key=60BLHNQCAOUFPIBZ&callback=test](http://freemusicarchive.org/api/get/curators.jsonp?api_key=60BLHNQCAOUFPIBZ&callback=test)
 
+## Original Author
+
+This is a fork of the original [JSON Viewer](https://github.com/tulios/json-viewer) created by [Tulio Ornelas](https://github.com/tulios).
+
 ## License
 
-See [LICENSE](https://github.com/tulios/json-viewer/blob/master/LICENSE) for more details.
+See [LICENSE](https://github.com/0xlek/json-viewer/blob/master/LICENSE) for more details.

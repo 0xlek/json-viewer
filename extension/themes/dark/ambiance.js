@@ -1,2 +1,2 @@
-require('codemirror/theme/ambiance.css');
-require('./ambiance/ambiance.scss');
+import 'codemirror/theme/ambiance.css';
+import './ambiance/ambiance.scss';

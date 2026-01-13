@@ -1,2 +1,2 @@
-require('codemirror/theme/zenburn.css');
-require('./zenburn/zenburn.scss');
+import 'codemirror/theme/zenburn.css';
+import './zenburn/zenburn.scss';

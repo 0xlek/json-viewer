@@ -1,2 +1,2 @@
-require('codemirror/theme/base16-light.css');
-require('./base16-light/base16-light.scss');
+import 'codemirror/theme/base16-light.css';
+import './base16-light/base16-light.scss';

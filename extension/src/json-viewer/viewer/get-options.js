@@ -1,20 +1,32 @@
-var Promise = require('promise');
-var chrome = require('chrome-framework');
-
 function getOptions() {
-  return new Promise(function(resolve, reject) {
-    chrome.runtime.sendMessage({action: "GET_OPTIONS"}, function(response) {
-      var err = response.err;
-      var value = response.value;
+  console.log('[JSONViewer] getOptions: Sending message to background');
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({action: "GET_OPTIONS"}, (response) => {
+      console.log('[JSONViewer] getOptions: Received response:', response);
+
+      if (chrome.runtime.lastError) {
+        console.error('[JSONViewer] getOptions: Runtime error:', chrome.runtime.lastError);
+        reject('getOptions: ' + chrome.runtime.lastError.message);
+        return;
+      }
+
+      if (!response) {
+        console.error('[JSONViewer] getOptions: No response from background script');
+        reject('getOptions: No response from background script');
+        return;
+      }
+
+      const { err, value } = response;
 
       if (err) {
+        console.error('[JSONViewer] getOptions: Error in response:', err);
         reject('getOptions: ' + err.message);
-
       } else {
+        console.log('[JSONViewer] getOptions: Successfully resolved with value');
         resolve(value);
       }
     });
   });
 }
 
-module.exports = getOptions;
+export default getOptions;

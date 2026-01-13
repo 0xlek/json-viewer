@@ -6,4 +6,4 @@ function extractJSON(rawJson) {
     .replace(/}\s*?\);?\s*$/, '}');
 }
 
-module.exports = extractJSON;
+export default extractJSON;

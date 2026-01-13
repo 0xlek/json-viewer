@@ -1,2 +1,2 @@
-require('./yeti/yeti.theme.css');
-require('./yeti/yeti.scss');
+import './yeti/yeti.theme.css';
+import './yeti/yeti.scss';

@@ -1,2 +1,2 @@
-require('./mehdi/mehdi.theme.css');
-require('./mehdi/mehdi.scss');
+import './mehdi/mehdi.theme.css';
+import './mehdi/mehdi.scss';

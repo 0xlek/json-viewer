@@ -1,34 +1,31 @@
-var Promise = require('promise');
-var chrome = require("chrome-framework");
-var MAX_WAIT = 20;
+const MAX_WAIT = 20;
 
 function loadCSS(opts) {
-  var url = chrome.extension.getURL(opts.path);
+  const url = chrome.runtime.getURL(opts.path);
 
-  var link = document.createElement("link");
-  var sheets = document.styleSheets;
+  const link = document.createElement("link");
   link.rel = "stylesheet";
   link.href = url;
   if (opts.id) link.id = opts.id;
 
   document.head.appendChild(link);
 
-  var checkElement = document.createElement("div");
+  const checkElement = document.createElement("div");
   checkElement.setAttribute("class", opts.checkClass);
   document.body.appendChild(checkElement);
 
-  var scheduleId = null;
-  var attempts = 0;
+  let scheduleId = null;
+  let attempts = 0;
 
-  return new Promise(function(resolve, reject) {
-    function scheduleCheck() {
-      var content = window.
-        getComputedStyle(checkElement, ":before").
-        getPropertyValue("content");
+  return new Promise((resolve, reject) => {
+    const scheduleCheck = () => {
+      const content = window
+        .getComputedStyle(checkElement, ":before")
+        .getPropertyValue("content");
 
       if (attempts > MAX_WAIT) {
         return reject(
-          Error("fail to load css: '" + url + "', content loaded: " + content)
+          new Error(`fail to load css: '${url}', content loaded: ${content}`)
         );
       }
 
@@ -36,15 +33,14 @@ function loadCSS(opts) {
         cancelAnimationFrame(scheduleId);
         document.body.removeChild(checkElement);
         resolve();
-
       } else {
         attempts++;
         scheduleId = requestAnimationFrame(scheduleCheck, 1);
       }
-    }
+    };
 
     scheduleCheck();
   });
 }
 
-module.exports = loadCSS;
+export default loadCSS;

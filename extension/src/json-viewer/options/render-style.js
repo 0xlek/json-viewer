@@ -1,7 +1,7 @@
-var defaults = require('./defaults');
+import defaults from './defaults';
 
 function renderStyle(CodeMirror, value) {
-  var styleInput = document.getElementById('style');
+  const styleInput = document.getElementById('style');
   styleInput.innerHTML = value;
 
   return CodeMirror.fromTextArea(styleInput, {
@@ -13,4 +13,4 @@ function renderStyle(CodeMirror, value) {
   });
 }
 
-module.exports = renderStyle;
+export default renderStyle;

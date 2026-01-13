@@ -1,2 +1,2 @@
-require('./coy/coy.theme.css');
-require('./coy/coy.scss');
+import './coy/coy.theme.css';
+import './coy/coy.scss';

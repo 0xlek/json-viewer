@@ -1,2 +1,2 @@
-require('./dracula/dracula.theme.css');
-require('./dracula/dracula.scss');
+import './dracula/dracula.theme.css';
+import './dracula/dracula.scss';

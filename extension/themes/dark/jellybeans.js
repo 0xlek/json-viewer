@@ -1,2 +1,2 @@
-require('./jellybeans/jellybeans.theme.css');
-require('./jellybeans/jellybeans.scss');
+import './jellybeans/jellybeans.theme.css';
+import './jellybeans/jellybeans.scss';

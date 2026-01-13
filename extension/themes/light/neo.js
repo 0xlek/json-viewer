@@ -1,2 +1,2 @@
-require('codemirror/theme/neo.css');
-require('./neo/neo.scss');
+import 'codemirror/theme/neo.css';
+import './neo/neo.scss';

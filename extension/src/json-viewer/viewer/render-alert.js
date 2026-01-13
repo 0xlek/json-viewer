@@ -1,31 +1,31 @@
-var loadCss = require('../load-css');
+import loadCss from '../load-css';
 
-function renderAlert(pre, options, content) {
-  var alertContainer = document.createElement("div");
+async function renderAlert(pre, options, content) {
+  const alertContainer = document.createElement("div");
   alertContainer.className = "json-viewer-alert";
   alertContainer.appendChild(content);
 
-  var closeBtn = document.createElement("a");
+  const closeBtn = document.createElement("a");
   closeBtn.className = "close";
   closeBtn.href = "#";
   closeBtn.title = "Close";
   closeBtn.innerHTML = "×";
-  closeBtn.onclick = function(e) {
+  closeBtn.onclick = (e) => {
     e.preventDefault();
     alertContainer.parentNode.removeChild(alertContainer);
-  }
+  };
 
   alertContainer.appendChild(closeBtn);
 
-  loadCss({path: "assets/viewer-alert.css", checkClass: "json-viewer-alert"}).then(function() {
+  try {
+    await loadCss({path: "assets/viewer-alert.css", checkClass: "json-viewer-alert"});
     document.body.appendChild(alertContainer);
-
-  }).catch(function(e) {
+  } catch(e) {
     alertContainer.hidden = false;
     if (process.env.NODE_ENV === 'development') {
       console.error('[JSONViewer] error: ' + e.message, e);
     }
-  });
+  }
 }
 
-module.exports = renderAlert;
+export default renderAlert;

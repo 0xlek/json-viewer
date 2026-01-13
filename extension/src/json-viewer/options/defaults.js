@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   theme: "default",
   addons: {
     prependHeader: true,
@@ -28,4 +28,4 @@ module.exports = {
     "  line-height: 1.5em;",
     "}"
   ].join('\n')
-}
+};

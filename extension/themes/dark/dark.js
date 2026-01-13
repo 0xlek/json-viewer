@@ -1,2 +1,2 @@
-require('./dark/dark.theme.css');
-require('./dark/dark.scss');
+import './dark/dark.theme.css';
+import './dark/dark.scss';

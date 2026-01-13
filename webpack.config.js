@@ -1,10 +1,10 @@
 var path = require("path");
 var fs = require('fs-extra');
 var webpack = require("webpack");
-var Clean = require("clean-webpack-plugin");
+var { CleanWebpackPlugin } = require("clean-webpack-plugin");
 var BuildPaths = require("./lib/build-paths");
 var BuildExtension = require("./lib/build-extension-webpack-plugin");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 var manifest = fs.readJSONSync(path.join(BuildPaths.SRC_ROOT, 'manifest.json'));
 var version = manifest.version;
@@ -13,8 +13,7 @@ var entries = {
   viewer: ["./extension/src/viewer.js"],
   "viewer-alert": ["./extension/styles/viewer-alert.scss"],
   options: ["./extension/src/options.js"],
-  backend: ["./extension/src/backend.js"],
-  omnibox: ["./extension/src/omnibox.js"],
+  background: ["./extension/src/background.js"],
   "omnibox-page": ["./extension/src/omnibox-page.js"]
 };
 
@@ -45,23 +44,50 @@ console.log("Entries list:");
 console.log(entries);
 console.log("\n");
 
-var manifest = {
-  debug: false,
+var webpackConfig = {
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+  devtool: false,
+  target: 'web',
   context: __dirname,
   entry: entries,
-  themes: themes,
   output: {
     path: path.join(__dirname, "build/json_viewer/assets"),
-    filename: "[name].js"
+    filename: "[name].js",
+    environment: {
+      arrowFunction: true,
+      const: true
+    }
   },
   module: {
-    loaders: [
-      {test: /\.(css|scss)$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader")}
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['@babel/preset-env', {
+                targets: { chrome: '88' },
+                modules: false
+              }]
+            ]
+          }
+        }
+      },
+      {
+        test: /\.(css|scss)$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader'
+        ]
+      }
     ]
   },
   resolve: {
-    extensions: ['', '.js', '.css', '.scss'],
-    root: path.resolve(__dirname, './extension'),
+    extensions: ['.js', '.css', '.scss'],
+    modules: [path.resolve(__dirname, './extension'), 'node_modules'],
   },
   externals: [
     {
@@ -69,8 +95,10 @@ var manifest = {
     }
   ],
   plugins: [
-    new Clean(["build"]),
-    new ExtractTextPlugin("[name].css", {allChunks: true}),
+    new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin({
+      filename: "[name].css"
+    }),
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
@@ -78,14 +106,14 @@ var manifest = {
         THEMES: JSON.stringify(themes)
       }
     }),
-    new BuildExtension()
+    new BuildExtension({ themes: themes })
   ]
 };
 
 if (process.env.NODE_ENV === 'production') {
-  manifest.plugins.push(new webpack.optimize.UglifyJsPlugin({sourceMap: false}));
-  manifest.plugins.push(new webpack.optimize.DedupePlugin());
-  manifest.plugins.push(new webpack.NoErrorsPlugin());
+  webpackConfig.optimization = {
+    minimize: true
+  };
 }
 
-module.exports = manifest;
+module.exports = webpackConfig;

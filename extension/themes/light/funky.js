@@ -1,2 +1,2 @@
-require('./funky/funky.theme.css');
-require('./funky/funky.scss');
+import './funky/funky.theme.css';
+import './funky/funky.scss';

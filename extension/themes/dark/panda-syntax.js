@@ -1,2 +1,2 @@
-require('./panda-syntax/panda-syntax.theme.css');
-require('./panda-syntax/panda-syntax.scss');
+import './panda-syntax/panda-syntax.theme.css';
+import './panda-syntax/panda-syntax.scss';

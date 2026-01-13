@@ -1,2 +1,2 @@
-require('codemirror/theme/mdn-like.css');
-require('./mdn-like/mdn-like.scss');
+import 'codemirror/theme/mdn-like.css';
+import './mdn-like/mdn-like.scss';

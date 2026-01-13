@@ -1,2 +1,2 @@
-require('codemirror/theme/cobalt.css');
-require('./cobalt/cobalt.scss');
+import 'codemirror/theme/cobalt.css';
+import './cobalt/cobalt.scss';

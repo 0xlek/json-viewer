@@ -1,21 +1,21 @@
-var svgFormat = require('./svg-format');
-var Mousetrap = require('mousetrap');
-require('mousetrap/plugins/global-bind/mousetrap-global-bind');
+import svgFormat from './svg-format';
+import Mousetrap from 'mousetrap';
+import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 
 function renderFormatButton(onFormatClick) {
-  var extras = document.getElementsByClassName("extras")[0];
+  const extras = document.getElementsByClassName("extras")[0];
 
-  var formatLink = document.createElement("a");
+  const formatLink = document.createElement("a");
   formatLink.className = "json_viewer icon format";
   formatLink.href = "#";
   formatLink.title = "Format (ctrl+shift+F / command+shift+F)";
   formatLink.innerHTML = svgFormat;
-  formatLink.onclick = function(e) {
+  formatLink.onclick = (e) => {
     e.preventDefault();
     onFormatClick();
   }
 
-  Mousetrap.bindGlobal(['command+shift+f', 'ctrl+shift+f'], function() {
+  Mousetrap.bindGlobal(['command+shift+f', 'ctrl+shift+f'], () => {
     onFormatClick();
     return false;
   });
@@ -23,4 +23,4 @@ function renderFormatButton(onFormatClick) {
   extras.appendChild(formatLink);
 }
 
-module.exports = renderFormatButton;
+export default renderFormatButton;

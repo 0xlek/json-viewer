@@ -1,2 +1,2 @@
-require('./material/material.theme.css');
-require('./material/material.scss');
+import './material/material.theme.css';
+import './material/material.scss';

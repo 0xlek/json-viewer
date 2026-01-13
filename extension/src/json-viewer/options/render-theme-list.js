@@ -1,10 +1,10 @@
-var jsonFormater = require('../jsl-format');
-var loadCss = require('../load-css');
-var themeDarkness = require('../theme-darkness');
+import jsonFormater from '../jsl-format';
+import loadCss from '../load-css';
+import themeDarkness from '../theme-darkness';
 
-var themeDefault = "default";
-var themesList = process.env.THEMES;
-var themeJSONExample = {
+const themeDefault = "default";
+const themesList = process.env.THEMES;
+const themeJSONExample = {
   title: "JSON Example",
   nested: {
     someInteger: 7,
@@ -18,37 +18,35 @@ var themeJSONExample = {
 }
 
 function onThemeChange(input, editor) {
-  var selectedTheme = input.options[input.selectedIndex].value;
-  // Split '_' to allow themes with variations (e.g: solarized dark; solarized light)
-  var themeOption = selectedTheme.replace(/_/, ' ');
+  const selectedTheme = input.options[input.selectedIndex].value;
+  const themeOption = selectedTheme.replace(/_/, ' ');
 
-  var currentLinkTag = document.getElementById('selected-theme');
+  const currentLinkTag = document.getElementById('selected-theme');
   if (currentLinkTag !== null) {
     document.head.removeChild(currentLinkTag);
   }
 
-  var themeToLoad = {
+  const themeToLoad = {
     id: "selected-theme",
-    path: "themes/" + themeDarkness(selectedTheme) + "/" + selectedTheme + ".css",
-    checkClass: "theme-" + selectedTheme + "-css-check"
+    path: `themes/${themeDarkness(selectedTheme)}/${selectedTheme}.css`,
+    checkClass: `theme-${selectedTheme}-css-check`
   };
 
   if (selectedTheme === "default") {
     editor.setOption("theme", themeOption);
-
   } else {
-    loadCss(themeToLoad).then(function() {
+    loadCss(themeToLoad).then(() => {
       editor.setOption("theme", themeOption);
     });
   }
 }
 
 function renderThemeList(CodeMirror, value) {
-  var themesInput = document.getElementById('themes');
-  var themesExampleInput = document.getElementById('themes-example');
+  const themesInput = document.getElementById('themes');
+  const themesExampleInput = document.getElementById('themes-example');
   themesExampleInput.innerHTML = jsonFormater(JSON.stringify(themeJSONExample));
 
-  var themeEditor = CodeMirror.fromTextArea(themesExampleInput, {
+  const themeEditor = CodeMirror.fromTextArea(themesExampleInput, {
     readOnly: true,
     mode: "application/ld+json",
     lineWrapping: true,
@@ -58,11 +56,11 @@ function renderThemeList(CodeMirror, value) {
     gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
   });
 
-  themes.onchange = function() {
+  themes.onchange = () => {
     onThemeChange(themesInput, themeEditor);
   }
 
-  var optionSelected = value;
+  const optionSelected = value;
   themesInput.appendChild(createOption(themeDefault, optionSelected));
   themesInput.appendChild(createThemeGroup("Light", themesList.light, optionSelected));
   themesInput.appendChild(createThemeGroup("Dark", themesList.dark, optionSelected));
@@ -73,7 +71,7 @@ function renderThemeList(CodeMirror, value) {
 }
 
 function createOption(theme, optionSelected) {
-  var option = document.createElement("option");
+  const option = document.createElement("option");
   option.value = theme
   option.text = theme;
 
@@ -85,17 +83,17 @@ function createOption(theme, optionSelected) {
 }
 
 function createGroup(label) {
-  var group = document.createElement("optgroup");
+  const group = document.createElement("optgroup");
   group.label = label;
   return group;
 }
 
 function createThemeGroup(name, list, optionSelected) {
-  var group = createGroup(name);
-  list.forEach(function(theme) {
+  const group = createGroup(name);
+  list.forEach((theme) => {
     group.appendChild(createOption(theme, optionSelected));
   });
   return group;
 }
 
-module.exports = renderThemeList;
+export default renderThemeList;

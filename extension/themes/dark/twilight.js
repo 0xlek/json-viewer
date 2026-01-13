@@ -1,2 +1,2 @@
-require('./twilight/twilight.theme.css');
-require('./twilight/twilight.scss');
+import './twilight/twilight.theme.css';
+import './twilight/twilight.scss';

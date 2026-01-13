@@ -1,7 +1,7 @@
-var jsonFormater = require('../jsl-format');
+import jsonFormater from '../jsl-format';
 
 function renderAddons(CodeMirror, value) {
-  var addonsInput = document.getElementById('addons');
+  const addonsInput = document.getElementById('addons');
   addonsInput.innerHTML = jsonFormater(JSON.stringify(value));
 
   return CodeMirror.fromTextArea(addonsInput, {
@@ -12,4 +12,4 @@ function renderAddons(CodeMirror, value) {
   });
 }
 
-module.exports = renderAddons;
+export default renderAddons;
