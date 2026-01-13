@@ -1,19 +1,25 @@
+import Storage from '../storage';
+
 const HISTORY_KEY = 'jq_query_history';
-const MAX_HISTORY_SIZE = 50;
+const DEFAULT_MAX_HISTORY_SIZE = 100;
 
 class JqHistory {
   constructor() {
     this.history = [];
     this.currentIndex = -1;
     this.tempQuery = '';
+    this.maxHistorySize = DEFAULT_MAX_HISTORY_SIZE;
   }
 
   async load() {
     try {
+      const options = await Storage.load();
+      this.maxHistorySize = options.addons.jqHistoryLimit || DEFAULT_MAX_HISTORY_SIZE;
+
       const result = await chrome.storage.local.get(HISTORY_KEY);
       this.history = result[HISTORY_KEY] || [];
       this.currentIndex = this.history.length;
-      console.log('[JSONViewer] Loaded jq history:', this.history.length, 'items');
+      console.log('[JSONViewer] Loaded jq history:', this.history.length, 'items (max:', this.maxHistorySize, ')');
     } catch (error) {
       console.error('[JSONViewer] Failed to load jq history:', error);
       this.history = [];
@@ -35,8 +41,8 @@ class JqHistory {
     this.history = this.history.filter(q => q !== query);
     this.history.push(query);
 
-    if (this.history.length > MAX_HISTORY_SIZE) {
-      this.history = this.history.slice(-MAX_HISTORY_SIZE);
+    if (this.history.length > this.maxHistorySize) {
+      this.history = this.history.slice(-this.maxHistorySize);
     }
 
     this.currentIndex = this.history.length;

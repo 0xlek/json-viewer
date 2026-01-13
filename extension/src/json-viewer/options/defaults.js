@@ -9,7 +9,8 @@ export default {
     clickableUrls: true,
     wrapLinkWithAnchorTag: false,
     openLinksInNewWindow: true,
-    autoHighlight: true
+    autoHighlight: true,
+    jqHistoryLimit: 100
   },
   structure: {
     readOnly: true,

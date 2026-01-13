@@ -53,6 +53,9 @@ class JqModal {
     input.placeholder = '. | .foo (examples: ., .name, .[] | select(.x > 5))';
     input.addEventListener('input', (e) => this.handleInput(e.target.value));
     input.addEventListener('keydown', (e) => this.handleKeyDown(e));
+    input.addEventListener('blur', () => {
+      setTimeout(() => this.hideAutocomplete(), 200);
+    });
     inputSection.appendChild(input);
 
     const autocomplete = document.createElement('div');

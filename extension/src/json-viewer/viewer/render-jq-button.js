@@ -1,4 +1,5 @@
 import Mousetrap from 'mousetrap';
+import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 import svgJq from './svg-jq';
 import JqController from '../jq/jq-controller';
 
@@ -11,7 +12,14 @@ function renderJqButton(pre, options, highlighter) {
 
   let controller = null;
 
-  const startJq = () => {
+  const toggleJq = () => {
+    if (controller && controller.modal && controller.modal.isVisible()) {
+      controller.modal.hide();
+      controller.cleanup();
+      controller = null;
+      return;
+    }
+
     if (controller) {
       return;
     }
@@ -33,12 +41,12 @@ function renderJqButton(pre, options, highlighter) {
 
   jqLink.onclick = (e) => {
     e.preventDefault();
-    startJq();
+    toggleJq();
   };
 
-  Mousetrap.bind(['ctrl+j', 'command+j'], (e) => {
+  Mousetrap.bindGlobal(['ctrl+j', 'command+j'], (e) => {
     e.preventDefault();
-    startJq();
+    toggleJq();
     return false;
   });
 

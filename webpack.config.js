@@ -17,7 +17,8 @@ var entries = {
   options: ["./extension/src/options.js"],
   background: ["./extension/src/background.js"],
   "offscreen-jq": ["./extension/src/offscreen-jq.js"],
-  "omnibox-page": ["./extension/src/omnibox-page.js"]
+  "omnibox-page": ["./extension/src/omnibox-page.js"],
+  popup: ["./extension/src/popup.js"]
 };
 
 function findThemes(darkness) {
