@@ -1,8 +1,8 @@
 {
   "name": "JSON Viewer Reborn",
-  "version": "0.18.1",
+  "version": "0.19.0",
   "manifest_version": 3,
-  "author": "Tulio Ornelas <ornelas.tulio@gmail.com>",
+  "author": "0xlek",
   "description": "The most beautiful and customizable JSON/JSONP highlighter that your eyes have ever seen. Modernized with Manifest v3 and ES6.",
   "homepage_url": "https://github.com/0xlek/json-viewer",
   "minimum_chrome_version": "88",

@@ -21,9 +21,10 @@
   background-color: white;
   border-radius: 4px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
-  max-height: 80vh;
-  width: 90%;
+  max-width: 1000px;
+  max-height: 1200px;
+  height: calc(100% - 32px);
+  width: calc(100% - 32px);
   display: flex;
   flex-direction: column;
   animation: slideIn 150ms ease-out;
@@ -145,12 +146,9 @@
 }
 
 .jq-modal-body {
-  padding: 20px;
   overflow-y: auto;
-  height: 400px;
-  min-height: 400px;
-  max-height: 400px;
   position: relative;
+  height: 100%;
 }
 
 .jq-modal-result {
